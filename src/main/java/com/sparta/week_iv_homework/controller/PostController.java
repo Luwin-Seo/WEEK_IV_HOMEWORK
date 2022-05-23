@@ -46,8 +46,4 @@ public class PostController {
         postService.update(id, requestDto);
         return id;
     }
-
-
-
-
 }
