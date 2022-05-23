@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Service</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <script>
+
+        $(document).ready(function () {
+            // HTML 문서를 로드할 때마다 실행합니다.
+            getPosts();
+        })
+
+        function getPosts() {
+            $('#cards-box').empty();
+            $.ajax({
+                type: "GET",
+                url: "/post",
+                data: {},
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let posts = response[i];
+                        let id = posts['id'];
+                        let title = posts['title']
+                        let username = posts['username'];
+                        let comment = posts['comment'];
+                        let createdAt = posts['createdAt']
+                        addHTML(id, title, username, comment, createdAt);
+                    }
+                }
+            });
+        }
+
+        function addHTML(id, title, username, comment, createdAt) {
+            let tempHtml = makeMessage(id, title, username, comment, createdAt);
+            $('#cards-box').append(tempHtml);
+        }
+
+        function makeMessage(id, title, username, comment, createdAt, i) {
+            return `<div class="card" >
+                        <!-- date/username 영역 -->
+                        <div class="metadata">
+                            <div class="date">
+                                ${createdAt}
+                            </div>
+                            <div id="${id}-username" class="username">
+                                ${username}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 id="${id}-title">${title}</h3>
+                        </div>
+                        <div>
+                            <button class="btnInside" onclick="showPost('${id}')" id="${id}-buttonIn">내용보기</button>
+                        </div>
+                        <!-- contents 조회/수정 영역-->
+                        <div class="contents">
+                            <div class="metadata" style="display: none" id="{id}-tguide">제목 수정하기</div>
+                            <textarea class="ti-edit" name="" id="${id}-titlearea" cols="30" rows="10" style="display: none"></textarea>
+                            <div id="${id}-contents" class="text" style="display: none">
+                                ${comment}
+                            </div>
+                            <div class="metadata" style="display: none" id="{id}-cguide">내용 수정하기</div>
+                            <div id="${id}-editarea" class="edit">
+                                <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                            </div>
+                             <!-- 버튼 영역-->
+                            <div class="footer">
+                                <div>
+                                <textarea class="passcheck" placeholder="비밀번호 입력" name="passwordcheck" id="${id}-check" cols="30"
+                                    rows="10" style="margin-bottom: 10px; display: none"></textarea>
+                                </div>
+                                <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')" style="display: none">
+                                <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')" style="display: none">
+                                <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('${id}')">
+                                <img id="${id}-close" class="icon-close-post" src="images/X.png" alt="" onclick="closePost('${id}')" style="display: none">
+                            </div>
+                        </div>`;
+        }
+
+        function writePost() {
+
+            let title = $('#title').val();
+            let username = $('#username').val();
+            let password = $('#password').val();
+            let comment = $('#comment').val();
+
+            if (title == ''){return alert("제목은 필수입니다");}
+            if (username == ''){return alert("닉네임은 필수입니다");}
+            if (password == ''){return alert("비밀번호는 필수입니다");}
+            if (comment == ''){return alert("내용입력은 필수입니다");}
+            if (comment.trim().length > 140) {return alert('공백 포함 140자 이하로 입력해주세요');}
+
+            let data = {'title':title, 'username': username, 'password': password, 'comment': comment};
+
+            $.ajax({
+                type: "POST",
+                url: "/post",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    window.location.reload();
+                }
+            });
+
+            $('#username').hide();
+            $('#password').hide();
+            $('#comment').hide();
+            $('#writeImg').hide();
+        }
+
+        function showPost(id) {
+            $(`#${id}-close`).show();
+            $(`#${id}-edit`).show();
+            $(`#${id}-contents`).show();
+            $(`#${id}-buttonIn`).hide();
+        }
+
+        function closePost(id) {
+            $(`#${id}-edit`).hide();
+            $(`#${id}-close`).hide();
+            $(`#${id}-submit`).hide();
+            $(`#${id}-delete`).hide();
+            $(`#${id}-check`).hide();
+            $(`#${id}-editarea`).hide();
+            $(`#${id}-contents`).hide();
+            $(`#${id}-cguide`).hide();
+            $(`#${id}-tguide`).hide();
+            $(`#${id}-titlearea`).hide();
+            $(`#${id}-title`).show();
+            $(`#${id}-buttonIn`).show();
+        }
+
+        function editPost(id) {
+            $(`#${id}-edit`).hide();
+            $(`#${id}-contents`).hide();
+            $(`#${id}-submit`).show();
+            $(`#${id}-delete`).show();
+            $(`#${id}-check`).show();
+            $(`#${id}-cguide`).show();
+            $(`#${id}-tguide`).show();
+            let contents = $(`#${id}-contents`).text().trim();
+            $(`#${id}-textarea`).val(contents);
+            let title = $(`#${id}-title`).text().trim();
+            $(`#${id}-titlearea`).val(title);
+            $(`#${id}-titlearea`).show();
+            $(`#${id}-title`).hide();
+            $(`#${id}-editarea`).show();
+        }
+
+        function submitEdit(id) {
+
+            let title = $(`#${id}-titlearea`).val().trim();
+            let username = $(`#${id}-username`).text().trim();
+            let password = $(`#${id}-check`).val().trim();
+            let comment = $(`#${id}-textarea`).val().trim();
+
+            if(title == '') {alert("타이틀은 비워둘 수 없습니다"); return;}
+            if(password == '') {alert("비밀번호를 확인하세요"); return;}
+            if(comment == '') {alert("수정할 내용을 작성해주세요"); return;}
+
+            $.ajax({
+                type: "GET",
+                url: `/post/${id}`,
+                success: function (response) {
+                    if (response == password ) {
+
+                        let data = {'title':title, 'username': username, 'password': password, 'comment': comment};
+
+                        $.ajax({
+                            type: "PUT",
+                            url: `/post/${id}`,
+                            contentType: "application/json",
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                alert('JOY문을 수정하였습니다.');
+                                window.location.reload();
+                            }
+                        });
+
+                    } else {alert("비밀번호를 확인하세요")}
+                }
+            })
+        }
+
+        function deleteOne(id) {
+            let password = $(`#${id}-check`).val().trim();
+            $.ajax({
+                type: "GET",
+                url: `/post/${id}`,
+                success: function (response) {
+                    if(response == password) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: `/post/${id}`,
+                            success: function (response) {
+                                alert('JOY문을 삭제하였습니다.');
+                                window.location.reload();
+                            }
+                        })
+                    } else {alert("비밀번호를 확인해주세요")}
+                }
+            })
+        }
+
+        function showPostBox() {
+            $('#username').show();
+            $('#password').show();
+            $('#title').show();
+            $('#comment').show();
+            $('#writeImg').show();
+        }
+
+
+        function test() {
+
+        }
+    </script>
+
+    <style>
+        @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+
+        body {
+            margin: 0px;
+        }
+
+        .area-edit {
+            display: none;
+        }
+
+        .wrap {
+            width: 538px;
+            margin: 10px auto;
+        }
+
+        #comment {
+            width: 538px;
+        }
+
+        .area-write {
+            position: relative;
+            width: 538px;
+        }
+
+        .area-write img {
+            cursor: pointer;
+            position: absolute;
+            width: 22.2px;
+            height: 18.7px;
+            bottom: 15px;
+            right: 17px;
+        }
+
+        .background-header {
+            position: fixed;
+            z-index: -1;
+            top: 0px;
+            width: 100%;
+            height: 428px;
+            background-color: #339af0;
+        }
+
+        .background-body {
+            position: fixed;
+            z-index: -1;
+            top: 428px;
+            height: 100%;
+            width: 100%;
+            background-color: #dee2e6;
+        }
+
+        .header {
+            margin-top: 50px;
+        }
+
+        .header h2 {
+            /*font-family: 'Noto Sans KR', sans-serif;*/
+            height: 33px;
+            font-size: 42px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.79;
+            letter-spacing: -0.5px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header p {
+            margin: 40px auto;
+            width: 217px;
+            height: 48px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: -1.12px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        h3 {
+            margin: 0px auto 10px auto;
+            width: 217px;
+            height: 22px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: -1.12px;
+            text-align: center;
+            color: black;
+        }
+
+        textarea.field {
+            width: 502px !important;
+            height: 146px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+
+        }textarea.titleField {
+             width: 502px !important;
+             height: 25px;
+             border-radius: 5px;
+             background-color: #ffffff;
+             border: none;
+             padding: 18px;
+             resize: none;
+         }
+
+        textarea.titleFix {
+            width: 100% !important;
+            height: 25px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+        }
+
+        textarea.userpass {
+            width: 240px !important;
+            height: 25px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
+        .userset {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .passcheck {
+            width: 200px !important;
+            height: 26px;
+            background-color: #ffffff;
+            border: none;
+            resize: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            padding: 5px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: lightgray;
+        }
+
+
+        textarea.field::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
+
+        textarea.titleField::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
+
+        .card {
+            width: 538px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .card .metadata {
+            position: relative;
+            display: flex;
+            font-family: 'Spoqa Han Sans';
+            font-size: 11px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.77px;
+            text-align: left;
+            color: #adb5bd;
+            height: 14px;
+            padding: 10px 23px;
+        }
+
+        .card .metadataII {
+            position: relative;
+            display: flex;
+            font-family: 'Spoqa Han Sans';
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.77px;
+            text-align: left;
+            color: #adb5bd;
+            height: 14px;
+            padding: 10px 23px;
+        }
+
+        .card .metadata .date {
+
+        }
+
+        .card .metadata .username {
+            margin-left: 20px;
+        }
+
+        .contents {
+            padding: 0px 23px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .contents div.edit {
+            display: none;
+        }
+
+        .contents textarea.te-edit {
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            resize: none;
+            border-bottom: 1px solid #212529;
+            width: 100%;
+            font-family: 'Spoqa Han Sans';
+        }
+
+        .ti-edit {
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            border-bottom: none;
+            resize: none;
+            width: 100%;
+            height: 25px;
+            font-family: 'Spoqa Han Sans';
+        }
+
+        .footer {
+            position: relative;
+            height: 40px;
+        }
+
+        .footer img.icon-start-edit {
+            cursor: pointer;
+            position: absolute;
+            bottom: 14px;
+            right: 56px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer img.icon-end-edit {
+            cursor: pointer;
+            position: absolute;
+            display: none;
+            bottom: 14px;
+            right: 56px;
+            width: 20px;
+            height: 15px;
+        }
+
+        .footer img.icon-close-post {
+            cursor: pointer;
+            position: absolute;
+            display: none;
+            bottom: 14px;
+            right: 2px;
+            width: 20px;
+            height: 15px;
+        }
+
+        .footer img.icon-delete {
+            cursor: pointer;
+            position: absolute;
+            bottom: 12px;
+            right: 32px;
+            width: 14px;
+            height: 18px;
+        }
+
+        #cards-box {
+            margin-top: 12px;
+        }
+        .getbtn {
+            width : 200px;
+            height : 50px;
+            background-color: transparent;
+            color: white;
+            border-radius: 50px;
+            border: 1px solid white;
+            margin: 0px auto 10px auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+        }
+        .getbtn:hover {
+            border: 2px solid white;
+        }
+
+        .btnInside {
+            width : 100px;
+            height : 25px;
+            background-color: transparent;
+            color: black;
+            border-radius: 25px;
+            border: 1px solid black;
+            margin: 20px auto 0px auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+        }
+        .btnInside:hover {
+            border: 2px solid black;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<div class="background-header">
+
+</div>
+<div class="background-body">
+
+</div>
+<div class="wrap">
+    <div class="header">
+        <h2>X를 눌러 JOY를 표하세요</h2>
+        <p>
+            스프링을 공부하다가 프론트엔드에 치여죽은 불쌍한 영혼 여기에 잠들다
+        </p>
+        <button onclick="showPostBox()" class="getbtn">
+            X
+        </button>
+    </div>
+    <div class="area-write" id="posting">
+        <div class="userset">
+        <textarea class="userpass" placeholder="닉네임" name="username" id="username" cols="30"
+                  rows="10" style="margin-bottom: 10px; margin-right: 10px; display: none"></textarea>
+        <textarea class="userpass" placeholder="비밀번호" name="password" id="password" cols="30"
+                  rows="10" style="margin-bottom: 10px; display: none"></textarea>
+        </div>
+        <textarea class="titleField" placeholder="JOY문의 제목을 적어주세요" name="title" id="title" cols="30"
+                  rows="10" style="display: none"></textarea>
+        <textarea class="field" placeholder="JOY문을 모두에게 공유해주세요" name="comment" id="comment" cols="30"
+                  rows="10" style="display: none"></textarea>
+        <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
+        <img src="images/send.png" alt="" onclick="writePost()"  id="writeImg" style="display: none">
+    </div>
+    <div id="cards-box" class="area-read">
+    </div>
+</div>
+</body>
+
+</html>
