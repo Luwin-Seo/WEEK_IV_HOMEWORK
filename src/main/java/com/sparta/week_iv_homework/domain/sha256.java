@@ -2,8 +2,8 @@ package com.sparta.week_iv_homework.domain;
 
 import java.security.MessageDigest;
 
-public class sha256 {
-    public static String testSHA256(String pwd) {
+public class SHA256 {
+    public static String sha256(String pwd) {
         try{
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
