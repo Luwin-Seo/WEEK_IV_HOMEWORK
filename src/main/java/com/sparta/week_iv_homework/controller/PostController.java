@@ -19,7 +19,6 @@ public class PostController {
 
     @PostMapping("/post")
     public Post createPost(@RequestBody PostRequestDto requestDto) {
-        SHA256 sha256 = new SHA256();
         Post post = new Post(requestDto);
         post.setPassword(SHA256.sha256(requestDto.getPassword()));
         return postRepository.save(post);
