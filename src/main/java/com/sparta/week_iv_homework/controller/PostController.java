@@ -4,6 +4,7 @@ package com.sparta.week_iv_homework.controller;
 import com.sparta.week_iv_homework.domain.Post;
 import com.sparta.week_iv_homework.domain.PostRepository;
 import com.sparta.week_iv_homework.domain.PostRequestDto;
+import com.sparta.week_iv_homework.domain.SHA256;
 import com.sparta.week_iv_homework.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,9 @@ public class PostController {
 
     @PostMapping("/post")
     public Post createPost(@RequestBody PostRequestDto requestDto) {
+        SHA256 sha256 = new SHA256();
         Post post = new Post(requestDto);
+        post.setPassword(SHA256.sha256(requestDto.getPassword()));
         return postRepository.save(post);
     }
 
@@ -28,11 +31,12 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String PasswordCheck(@PathVariable Long id) {
+    public boolean PasswordCheck(@PathVariable Long id, @RequestParam String paramPassword) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 아이디가 존재하지 않습니다")
         );
-        return post.getPassword();
+        if (post.getPassword().equals(SHA256.sha256(paramPassword))) return true;
+        else return false;
     }
 
     @DeleteMapping("/post/{id}")

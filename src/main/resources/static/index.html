@@ -169,13 +169,16 @@
             if(password == '') {alert("비밀번호를 확인하세요"); return;}
             if(comment == '') {alert("수정할 내용을 작성해주세요"); return;}
 
+            let data = {'title':title, 'username': username, 'password': password, 'comment': comment};
+
             $.ajax({
                 type: "GET",
                 url: `/post/${id}`,
+                data: {paramPassword : password},
                 success: function (response) {
-                    if (response == password ) {
+                    alert(response)
 
-                        let data = {'title':title, 'username': username, 'password': password, 'comment': comment};
+                    if (response) {
 
                         $.ajax({
                             type: "PUT",
@@ -198,8 +201,9 @@
             $.ajax({
                 type: "GET",
                 url: `/post/${id}`,
+                data: {paramPassword : password},
                 success: function (response) {
-                    if(response == password) {
+                    if (response) {
                         $.ajax({
                             type: "DELETE",
                             url: `/post/${id}`,
