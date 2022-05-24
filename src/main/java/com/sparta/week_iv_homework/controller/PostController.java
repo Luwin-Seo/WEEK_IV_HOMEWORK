@@ -26,7 +26,7 @@ public class PostController {
 
     @GetMapping("/post")
     public List<Post> getPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc();
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @GetMapping("/post/{id}")
@@ -46,6 +46,7 @@ public class PostController {
 
     @PutMapping("/post/{id}")
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
+        requestDto.setPassword(SHA256.sha256(requestDto.getPassword()));
         postService.update(id, requestDto);
         return id;
     }
