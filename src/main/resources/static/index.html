@@ -169,17 +169,16 @@
             if(password == '') {alert("비밀번호를 확인하세요"); return;}
             if(comment == '') {alert("수정할 내용을 작성해주세요"); return;}
 
+            let passData = {'password' : password}
             let data = {'title':title, 'username': username, 'password': password, 'comment': comment};
 
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: `/post/${id}`,
-                data: {paramPassword : password},
+                contentType: "application/json",
+                data: JSON.stringify(passData),
                 success: function (response) {
-                    alert(response)
-
                     if (response) {
-
                         $.ajax({
                             type: "PUT",
                             url: `/post/${id}`,
@@ -198,10 +197,12 @@
 
         function deleteOne(id) {
             let password = $(`#${id}-check`).val().trim();
+            let passData = {'password' : password}
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: `/post/${id}`,
-                data: {paramPassword : password},
+                contentType: "application/json",
+                data: JSON.stringify(passData),
                 success: function (response) {
                     if (response) {
                         $.ajax({

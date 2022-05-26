@@ -29,12 +29,15 @@ public class PostController {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    @GetMapping("/post/{id}")
-    public boolean PasswordCheck(@PathVariable Long id, @RequestParam String paramPassword) {
+    @PostMapping("/post/{id}")
+    public boolean PasswordCheck(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 아이디가 존재하지 않습니다")
         );
-        if (post.getPassword().equals(SHA256.sha256(paramPassword))) return true;
+        System.out.println(requestDto.getPassword());
+        System.out.println(post.getPassword());
+        System.out.println(SHA256.sha256(requestDto.getPassword()));
+        if (post.getPassword().equals(SHA256.sha256(requestDto.getPassword()))) return true;
         else return false;
     }
 
