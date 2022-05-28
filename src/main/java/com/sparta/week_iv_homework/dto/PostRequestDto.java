@@ -1,4 +1,4 @@
-package com.sparta.week_iv_homework.domain;
+package com.sparta.week_iv_homework.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

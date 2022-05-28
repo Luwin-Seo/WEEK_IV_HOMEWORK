@@ -1,6 +1,7 @@
 package com.sparta.week_iv_homework.domain;
 
 
+import com.sparta.week_iv_homework.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

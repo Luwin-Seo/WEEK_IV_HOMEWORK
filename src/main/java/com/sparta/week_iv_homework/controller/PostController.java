@@ -2,8 +2,8 @@ package com.sparta.week_iv_homework.controller;
 
 
 import com.sparta.week_iv_homework.domain.Post;
-import com.sparta.week_iv_homework.domain.PostRepository;
-import com.sparta.week_iv_homework.domain.PostRequestDto;
+import com.sparta.week_iv_homework.repository.PostRepository;
+import com.sparta.week_iv_homework.dto.PostRequestDto;
 import com.sparta.week_iv_homework.domain.SHA256;
 import com.sparta.week_iv_homework.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class PostController {
         return postRepository.save(post);
     }
 
-    @GetMapping("/post")
+    @PostMapping("/")
     public List<Post> getPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }

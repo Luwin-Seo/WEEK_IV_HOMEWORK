@@ -1,8 +1,8 @@
 package com.sparta.week_iv_homework.service;
 
 import com.sparta.week_iv_homework.domain.Post;
-import com.sparta.week_iv_homework.domain.PostRepository;
-import com.sparta.week_iv_homework.domain.PostRequestDto;
+import com.sparta.week_iv_homework.repository.PostRepository;
+import com.sparta.week_iv_homework.dto.PostRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
