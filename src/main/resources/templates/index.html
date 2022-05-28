@@ -15,6 +15,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <script>
 
+        $.ajaxPrefilter(function (options) {
+            var headerName = '${_csrf.headerName}';
+            var token = '${_csrf.token}';
+            if (options.method === 'POST') {
+                options.headers = options.headers || {};
+                options.headers[headerName] = token;
+            }
+        });
+
         $(document).ready(function () {
             // HTML 문서를 로드할 때마다 실행합니다.
             getPosts();
@@ -23,8 +32,8 @@
         function getPosts() {
             $('#cards-box').empty();
             $.ajax({
-                type: "POST",
-                url: "/",
+                type: "GET",
+                url: "/list",
                 data: {},
                 success: function (response) {
                     for (let i = 0; i < response.length; i++) {
@@ -81,7 +90,7 @@
                                 </div>
                                 <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')" style="display: none">
                                 <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')" style="display: none">
-                                <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('${id}')">
+                                <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('${id}')" >
                                 <img id="${id}-close" class="icon-close-post" src="images/X.png" alt="" onclick="closePost('${id}')" style="display: none">
                             </div>
                         </div>`;
@@ -174,14 +183,14 @@
 
             $.ajax({
                 type: "POST",
-                url: `/post/${id}`,
+                url: `/mod/${id}`,
                 contentType: "application/json",
                 data: JSON.stringify(passData),
                 success: function (response) {
                     if (response) {
                         $.ajax({
                             type: "PUT",
-                            url: `/post/${id}`,
+                            url: `/mod/${id}`,
                             contentType: "application/json",
                             data: JSON.stringify(data),
                             success: function (response) {
@@ -200,14 +209,14 @@
             let passData = {'password' : password}
             $.ajax({
                 type: "POST",
-                url: `/post/${id}`,
+                url: `/mod/${id}`,
                 contentType: "application/json",
                 data: JSON.stringify(passData),
                 success: function (response) {
                     if (response) {
                         $.ajax({
                             type: "DELETE",
-                            url: `/post/${id}`,
+                            url: `/mod/${id}`,
                             success: function (response) {
                                 alert('JOY문을 삭제하였습니다.');
                                 window.location.reload();
@@ -522,6 +531,7 @@
             right: 56px;
             width: 18px;
             height: 18px;
+            background-image: url('../static/images/edit.png');
         }
 
         .footer img.icon-end-edit {
@@ -532,6 +542,7 @@
             right: 56px;
             width: 20px;
             height: 15px;
+            background-image: url('../static/images/done.png');
         }
 
         .footer img.icon-close-post {
@@ -542,6 +553,7 @@
             right: 2px;
             width: 20px;
             height: 15px;
+            background-image: url('../static/images/X.png');
         }
 
         .footer img.icon-delete {
@@ -551,6 +563,7 @@
             right: 32px;
             width: 14px;
             height: 18px;
+            background-image: url('../static/images/X.png');
         }
 
         #cards-box {
@@ -635,7 +648,7 @@
         <textarea class="field" placeholder="JOY문을 모두에게 공유해주세요" name="comment" id="comment" cols="30"
                   rows="10" style="display: none"></textarea>
         <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
-        <img src="images/send.png" alt="" onclick="writePost()" id="writeImg" style="display: none">
+        <img alt="" onclick="writePost()" id="writeImg" style="display: none" th:src="@{images/send.png}"/>
     </div>
     <div id="cards-box" class="area-read">
     </div>

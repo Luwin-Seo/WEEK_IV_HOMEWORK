@@ -24,12 +24,12 @@ public class PostController {
         return postRepository.save(post);
     }
 
-    @PostMapping("/")
+    @GetMapping("/list")
     public List<Post> getPosts() {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    @PostMapping("/post/{id}")
+    @PostMapping("/mod/{id}")
     public boolean PasswordCheck(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 아이디가 존재하지 않습니다")
@@ -41,13 +41,13 @@ public class PostController {
         else return false;
     }
 
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/mod/{id}")
     public Long deletePost(@PathVariable Long id) {
         postRepository.deleteById(id);
         return id;
     }
 
-    @PutMapping("/post/{id}")
+    @PutMapping("/mod/{id}")
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
         requestDto.setPassword(SHA256.sha256(requestDto.getPassword()));
         postService.update(id, requestDto);
