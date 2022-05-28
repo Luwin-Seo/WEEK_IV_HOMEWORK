@@ -64,6 +64,8 @@
                             <div id="${id}-username" class="username">
                                 ${username}
                             </div>
+                            <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')" style="display: none">
+                            <img id="${id}-close" class="icon-close-post" src="images/X.png" alt="" onclick="closePost('${id}')" style="display: none">
                         </div>
                         <div>
                             <h3 id="${id}-title">${title}</h3>
@@ -88,10 +90,10 @@
                                 <textarea class="passcheck" placeholder="비밀번호 입력" name="passwordcheck" id="${id}-check" cols="30"
                                     rows="10" style="margin-bottom: 10px; display: none"></textarea>
                                 </div>
-                                <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')" style="display: none">
+
                                 <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')" style="display: none">
                                 <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('${id}')" >
-                                <img id="${id}-close" class="icon-close-post" src="images/X.png" alt="" onclick="closePost('${id}')" style="display: none">
+
                             </div>
                         </div>`;
         }
@@ -524,11 +526,11 @@
             height: 40px;
         }
 
-        .footer img.icon-start-edit {
+        .metadata img.icon-start-edit {
             cursor: pointer;
             position: absolute;
-            bottom: 14px;
-            right: 56px;
+            top: 14px;
+            right: 44px;
             width: 18px;
             height: 18px;
             background-image: url('../static/images/edit.png');
@@ -539,18 +541,18 @@
             position: absolute;
             display: none;
             bottom: 14px;
-            right: 56px;
+            right: 24px;
             width: 20px;
             height: 15px;
             background-image: url('../static/images/done.png');
         }
 
-        .footer img.icon-close-post {
+        .metadata img.icon-close-post {
             cursor: pointer;
             position: absolute;
             display: none;
-            bottom: 14px;
-            right: 2px;
+            top: 14px;
+            right: 14px;
             width: 20px;
             height: 15px;
             background-image: url('../static/images/X.png');
@@ -559,8 +561,8 @@
         .footer img.icon-delete {
             cursor: pointer;
             position: absolute;
-            bottom: 12px;
-            right: 32px;
+            bottom: 14px;
+            right: 0;
             width: 14px;
             height: 18px;
             background-image: url('../static/images/X.png');

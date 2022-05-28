@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/post").permitAll()
                 .antMatchers("/list").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/mod/**").permitAll()
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
                 .and()
