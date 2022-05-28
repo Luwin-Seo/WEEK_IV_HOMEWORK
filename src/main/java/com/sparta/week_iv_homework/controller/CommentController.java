@@ -28,4 +28,12 @@ public class CommentController {
     public List<Comment> showComment(@PathVariable Long id){
         return commentRepository.findByPostNum(id);
     }
+
+    @DeleteMapping("/comment/{id}")
+    public Long deleteReply(@PathVariable Long id) {
+        Long postNum = commentRepository.getById(id).getPostNum();
+        commentRepository.deleteById(id);
+        return postNum;
+    }
+
 }

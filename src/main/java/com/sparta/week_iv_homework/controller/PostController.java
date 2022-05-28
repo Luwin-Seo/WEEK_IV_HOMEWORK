@@ -29,7 +29,7 @@ public class PostController {
     @GetMapping("/post")
     public String checkLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
-        return username + "님의 글이 게시되었습니다";
+        return "정상처리 되었습니다";
     }
 
     @GetMapping("/list")
