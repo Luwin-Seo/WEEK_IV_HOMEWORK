@@ -5,8 +5,10 @@ import com.sparta.week_iv_homework.domain.Post;
 import com.sparta.week_iv_homework.repository.PostRepository;
 import com.sparta.week_iv_homework.dto.PostRequestDto;
 import com.sparta.week_iv_homework.domain.SHA256;
+import com.sparta.week_iv_homework.security.UserDetailsImpl;
 import com.sparta.week_iv_homework.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,12 @@ public class PostController {
         Post post = new Post(requestDto);
         post.setPassword(SHA256.sha256(requestDto.getPassword()));
         return postRepository.save(post);
+    }
+
+    @GetMapping("/post")
+    public String checkLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String username = userDetails.getUsername();
+        return username + "님의 글이 게시되었습니다";
     }
 
     @GetMapping("/list")
