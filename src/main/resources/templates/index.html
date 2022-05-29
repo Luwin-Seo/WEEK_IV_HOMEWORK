@@ -407,8 +407,14 @@
             });
         }
 
-
-        function test() {
+        function logout() {
+            $.ajax({
+                type: "POST",
+                url: "/user/logout",
+                success: function (response) {
+                    alert("애도를 마치고 로그아웃 합니다")
+                }
+            });
 
         }
     </script>
@@ -865,7 +871,7 @@
 
 <body>
 <div class="background-header">
-
+    <img id="logout" class="icon-logout" src="images/logout.png" style="margin-top: 20px; margin-right: 20px; float: right" alt="" onclick="logout()">
 </div>
 <div class="background-body">
 
