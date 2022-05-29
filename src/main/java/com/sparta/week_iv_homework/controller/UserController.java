@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/user")
     @ResponseBody
-    public Boolean usernameCheck(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String username) {
+    public boolean usernameCheck(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String username) {
         System.out.println(username);
         System.out.println(userDetails.getUsername().equals(username));
         return userDetails.getUsername().equals(username);

@@ -20,9 +20,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/post")
-    public Post createPost(@RequestBody PostRequestDto requestDto) {
+    public Post createPost(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PostRequestDto requestDto) {
         Post post = new Post(requestDto);
-        post.setPassword(SHA256.sha256(requestDto.getPassword()));
+        post.setUsername(userDetails.getUsername());
         return postRepository.save(post);
     }
 
@@ -37,16 +37,12 @@ public class PostController {
         return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
-    @PostMapping("/mod/{id}")
-    public boolean PasswordCheck(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
+    @GetMapping ("/mod/{id}")
+    public boolean userCheck(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new NullPointerException("해당 아이디가 존재하지 않습니다")
         );
-        System.out.println(requestDto.getPassword());
-        System.out.println(post.getPassword());
-        System.out.println(SHA256.sha256(requestDto.getPassword()));
-        if (post.getPassword().equals(SHA256.sha256(requestDto.getPassword()))) return true;
-        else return false;
+        return post.getUsername().equals(userDetails.getUsername());
     }
 
     @DeleteMapping("/mod/{id}")
@@ -57,7 +53,6 @@ public class PostController {
 
     @PutMapping("/mod/{id}")
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
-        requestDto.setPassword(SHA256.sha256(requestDto.getPassword()));
         postService.update(id, requestDto);
         return id;
     }

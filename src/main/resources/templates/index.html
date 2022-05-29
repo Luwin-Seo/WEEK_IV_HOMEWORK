@@ -112,16 +112,12 @@
                 data: {},
                 success: function (response) {
                     let title = $('#title').val();
-                    let username = $('#username').val();
-                    let password = $('#password').val();
                     let content = $('#content').val();
 
                     if (title == ''){return alert("제목은 필수입니다");}
-                    if (username == ''){return alert("닉네임은 필수입니다");}
-                    if (password == ''){return alert("비밀번호는 필수입니다");}
                     if (content == ''){return alert("내용입력은 필수입니다");}
                     if (content.trim().length > 140) {return alert('공백 포함 140자 이하로 입력해주세요');}
-                    let data = {'title':title, 'username': username, 'password': password, 'content': content};
+                    let data = {'title':title, 'content': content};
 
                     $.ajax({
                         type: "POST",
@@ -186,7 +182,7 @@
                                                 </div>
                                             </div>
                                              <div style="padding: 0 23px 0 10px;" id="${commentid}-commain">${comment}
-                                             <img id="${commentid}-deletecom" style="float: right; margin 0px 10px 0px 10px" src="images/delete.png" alt="" onclick="deleteComment('${commentid}')">
+                                             <img id="${commentid}-deletecom" style="float: right; margin 0px 10px 0px 10px" src="images/delete.png" alt="" onclick="deleteComment('${commentid}','${username}')">
                                              <img id="${commentid}-comedit" style="float: right; margin-right: 10px" src="images/edit.png" alt="" onclick="showEditComment('${commentid}','${comment}')">
                                             </div>
                                             <div style="padding: 10px 23px 0 10px">
@@ -248,22 +244,16 @@
         function submitEdit(id) {
 
             let title = $(`#${id}-titlearea`).val().trim();
-            let username = $(`#${id}-username`).text().trim();
-            let password = $(`#${id}-check`).val().trim();
             let content = $(`#${id}-textarea`).val().trim();
 
             if(title == '') {alert("타이틀은 비워둘 수 없습니다"); return;}
-            if(password == '') {alert("비밀번호를 확인하세요"); return;}
             if(content == '') {alert("수정할 내용을 작성해주세요"); return;}
 
-            let passData = {'password' : password}
-            let data = {'title':title, 'username': username, 'password': password, 'content': content};
+            let data = {'title':title, 'content': content};
 
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: `/mod/${id}`,
-                contentType: "application/json",
-                data: JSON.stringify(passData),
                 success: function (response) {
                     if (response) {
                         $.ajax({
@@ -276,20 +266,15 @@
                                 window.location.reload();
                             }
                         });
-
-                    } else {alert("비밀번호를 확인하세요")}
+                    } else {alert("작성자만 글을 수정할 수 있습니다")}
                 }
             })
         }
 
         function deleteOne(id) {
-            let password = $(`#${id}-check`).val().trim();
-            let passData = {'password' : password}
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: `/mod/${id}`,
-                contentType: "application/json",
-                data: JSON.stringify(passData),
                 success: function (response) {
                     if (response) {
                         $.ajax({
@@ -300,7 +285,7 @@
                                 window.location.reload();
                             }
                         })
-                    } else {alert("비밀번호를 확인해주세요")}
+                    } else {alert("작성자만 게시글을 삭제할 수 있습니다")}
                 }
             })
         }
@@ -338,32 +323,36 @@
             showPost(id)
         }
 
-        function deleteComment(id){
+        function deleteComment(id, username){
             $.ajax({
                 type: "GET",
-                url: "/post",
-                data: {},
+                url: "/user",
+                data: {username:username},
                 success: function (response) {
 
-                    $.ajax({
-                        type: "DELETE",
-                        url: `/comment/${id}`,
-                        data: {},
-                        success: function (response) {
+                    if (response) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: `/comment/${id}`,
+                            data: {},
+                            success: function (response) {
 
-                            getPosts()
-                            setTimeout(function(){showPost(response);},100)
+                                getPosts()
+                                setTimeout(function(){showPost(response);},100)
 
-                        }
-                    });
-                    alert("정상처리 되었습니다")
-                },
-                error: function () {
-                    alert('코멘트를 삭제하려면 로그인해 주세요')
-                    window.location.href = "/user/login"
+                            }
+                        });
+                        alert("정상처리 되었습니다")
+                    }
                 }
             });
         }
+
+
+
+
+
+
 
         function showPostBox() {
             $('#cards-box').empty();
@@ -389,7 +378,6 @@
             if (comment.length > 80) {alert("코멘트는 80자 미만으로 작성해주세요"); return;}
             if (comment == "") {alert("수정할 내용을 입력해 주세요"); return;}
             let data = {'postNum':postNum, 'username':username, 'comment':comment}
-            let userdata = {'username':username}
 
             $.ajax({
                 type: "GET",
@@ -893,12 +881,6 @@
         </button>
     </div>
     <div class="area-write" id="posting">
-        <div class="userset">
-        <textarea class="userpass" placeholder="닉네임" name="username" id="username" cols="30"
-                  rows="10" style="margin-bottom: 10px; margin-right: 10px; display: none"></textarea>
-        <textarea class="userpass" placeholder="비밀번호" name="password" id="password" cols="30"
-                  rows="10" style="margin-bottom: 10px; display: none"></textarea>
-        </div>
         <textarea class="titleField" placeholder="JOY문의 제목을 적어주세요" name="title" id="title" cols="30"
                   rows="10" style="display: none"></textarea>
         <div>
