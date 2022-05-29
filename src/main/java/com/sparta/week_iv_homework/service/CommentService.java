@@ -7,6 +7,8 @@ import com.sparta.week_iv_homework.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -19,4 +21,14 @@ public class CommentService {
         comment.setComment(requestDto.getComment());
         commentRepository.save(comment);
     }
+
+    @Transactional
+    public void replyUpdate(Long id, CommentRequestDto requestDto) {
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("해당 아이디가 존재하지 않습니다")
+        );
+        comment.update(requestDto);
+
+    }
+
 }

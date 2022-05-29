@@ -181,11 +181,19 @@
                                                 <div class="date">
                                                     ${createdAt}
                                                 </div>
-                                                <div id="${id}-username" class="username">
+                                                <div id="${commentid}-username" class="username">
                                                     ${username}  님의 댓글
                                                 </div>
                                             </div>
-                                             <div style="padding: 0 23px 0 20px;">${comment}<img id="${id}-deletecom" style="float: right" src="images/delete.png" alt="" onclick="deleteComment('${commentid}')"></div>
+                                             <div style="padding: 0 23px 0 10px;" id="${commentid}-commain">${comment}
+                                             <img id="${commentid}-deletecom" style="float: right; margin 0px 10px 0px 10px" src="images/delete.png" alt="" onclick="deleteComment('${commentid}')">
+                                             <img id="${commentid}-comedit" style="float: right; margin-right: 10px" src="images/edit.png" alt="" onclick="showEditComment('${commentid}','${comment}')">
+                                            </div>
+                                            <div style="padding: 10px 23px 0 10px">
+                                             <textarea id="${commentid}-commentarea" class="comEdit" name="" id="" cols="30" rows="3" style="display: none"></textarea>
+                                             <img id="${commentid}-submitcomE" src="images/done.png" alt="" style="float: right; margin-top: 10px; display: none" onclick="submitEditCom('${commentid}','${username}','${id}')" >
+
+                                             </div>
 
                                         </div>`
 
@@ -309,9 +317,6 @@
                 url: "/post",
                 data: {},
                 success: function (response) {
-
-
-
                     $.ajax({
                         type: "POST",
                         url: `/comment/${id}`,
@@ -370,8 +375,48 @@
             $('#content').show();
             $('#writeImg').show();
             $('#closeposter').show();
+        }
+
+        function showEditComment(id,comment) {
+            $(`#${id}-commentarea`).show();
+            $(`#${id}-submitcomE`).show();
+            let commentApply = comment.trim();
+            $(`#${id}-commentarea`).val(commentApply);
+            $(`#${id}-commain`).hide();
+        }
+        function submitEditCom(id, username, postNum) {
+            let comment = $(`#${id}-commentarea`).val().trim()
+            if (comment.length > 80) {alert("코멘트는 80자 미만으로 작성해주세요"); return;}
+            if (comment == "") {alert("수정할 내용을 입력해 주세요"); return;}
+            let data = {'postNum':postNum, 'username':username, 'comment':comment}
+            let userdata = {'username':username}
+
+            $.ajax({
+                type: "GET",
+                url: "/user",
+                data: {username:username},
+                success: function (response) {
+
+                    if (response) {
+                        $.ajax({
+                            type: "PUT",
+                            url: `/comment/${id}`,
+                            contentType: "application/json",
+                            data: JSON.stringify(data),
+                            success: function (response) {
+
+                                getPosts()
+                                setTimeout(function(){showPost(response);},100)
+
+                            }
+                        });
+                        alert("정상처리 되었습니다")
+                    }
 
 
+
+                }
+            });
         }
 
 
@@ -551,6 +596,24 @@
 
         .passcheck {
             width: 200px !important;
+            height: 26px;
+            background-color: #ffffff;
+            border: none;
+            resize: none;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            padding: 5px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: lightgray;
+        }
+
+        .comEdit {
+            width: 450px !important;
             height: 26px;
             background-color: #ffffff;
             border: none;

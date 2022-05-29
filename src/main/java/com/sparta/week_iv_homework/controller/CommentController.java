@@ -36,4 +36,10 @@ public class CommentController {
         return postNum;
     }
 
+    @PutMapping("/comment/{id}")
+    public Long updateReply(@PathVariable Long id, @RequestBody CommentRequestDto requestDto) {
+        commentService.replyUpdate(id, requestDto);
+        return commentRepository.getById(id).getPostNum();
+    }
+
 }

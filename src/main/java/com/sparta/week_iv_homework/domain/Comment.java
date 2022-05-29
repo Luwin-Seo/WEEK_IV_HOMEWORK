@@ -1,5 +1,6 @@
 package com.sparta.week_iv_homework.domain;
 
+import com.sparta.week_iv_homework.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,4 +29,9 @@ public class Comment extends Timestamped {
     @Column
     private String comment;
 
+    public void update(CommentRequestDto requestDto) {
+        this.postNum = requestDto.getPostNum();
+        this.username = requestDto.getUsername();
+        this.comment = requestDto.getComment();
+    }
 }
