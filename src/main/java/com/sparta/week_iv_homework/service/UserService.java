@@ -1,6 +1,7 @@
 package com.sparta.week_iv_homework.service;
 
 import com.sparta.week_iv_homework.domain.User;
+import com.sparta.week_iv_homework.domain.UserRoleEnum;
 import com.sparta.week_iv_homework.repository.UserRepository;
 import com.sparta.week_iv_homework.dto.SignupRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class UserService {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
         User user = new User(username,password);
+        user.setRole(UserRoleEnum.USER);
         userRepository.save(user);
     }
 

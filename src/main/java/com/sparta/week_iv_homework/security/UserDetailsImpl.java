@@ -1,10 +1,13 @@
 package com.sparta.week_iv_homework.security;
 
 import com.sparta.week_iv_homework.domain.User;
+import com.sparta.week_iv_homework.domain.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -14,8 +17,18 @@ public class UserDetailsImpl implements UserDetails {
     private final User user;
 
     @Override
+    //유저 엔티티에서 가지고 있는 유저 롤은 String 형태이므로 UserDetail에서 요구하는 형식에 부합하지 않으므로 이 형식에 맞게
+    //변형이 필요하여 아래의 과정을 진행해야 함함
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        UserRoleEnum role = user.getRole();
+        String authority = role.getAuthority();
+
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleGrantedAuthority);
+
+        return authorities;
+
     }
 
     @Override

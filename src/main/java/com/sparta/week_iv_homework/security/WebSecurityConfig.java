@@ -1,12 +1,19 @@
 package com.sparta.week_iv_homework.security;
 
+import com.sparta.week_iv_homework.security.filter.FormLoginFilter;
+import com.sparta.week_iv_homework.security.provider.FormLoginAuthProvider;
+import com.sparta.week_iv_homework.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
@@ -16,6 +23,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public FormLoginAuthProvider formLoginAuthProvider() {
+        return new FormLoginAuthProvider(encodePassword());
+    }
+
+    @Bean
+    public FormLoginSuccessHandler formLoginSuccessHandler() {
+        return new FormLoginSuccessHandler();
+    }
+
+    @Bean
+    public FormLoginFilter formLoginFilter() throws Exception {
+        FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
+        formLoginFilter.setFilterProcessesUrl("user/login");
+        formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
+        formLoginFilter.afterPropertiesSet();
+        return formLoginFilter;
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) {
+        auth
+                .authenticationProvider(formLoginAuthProvider());
+    }
+
 
     @Override
     public void configure(WebSecurity web) {
@@ -27,6 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+
 // 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
         http.csrf()
                 .ignoringAntMatchers("/user/**")
@@ -34,6 +75,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/mod/**")
                 .ignoringAntMatchers("/comment/**")
                 .ignoringAntMatchers("/");
+
+        http
+                .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
 // image 폴더를 login 없이 허용

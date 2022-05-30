@@ -1,4 +1,4 @@
-package com.sparta.week_iv_homework.security;
+package trashCan;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

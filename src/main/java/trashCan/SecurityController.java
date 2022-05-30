@@ -1,4 +1,4 @@
-package com.sparta.week_iv_homework.security;
+package trashCan;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
