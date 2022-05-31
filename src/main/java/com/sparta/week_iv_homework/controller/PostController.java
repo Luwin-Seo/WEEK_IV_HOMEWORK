@@ -4,7 +4,6 @@ package com.sparta.week_iv_homework.controller;
 import com.sparta.week_iv_homework.domain.Post;
 import com.sparta.week_iv_homework.repository.PostRepository;
 import com.sparta.week_iv_homework.dto.PostRequestDto;
-import com.sparta.week_iv_homework.domain.SHA256;
 import com.sparta.week_iv_homework.security.UserDetailsImpl;
 import com.sparta.week_iv_homework.service.PostService;
 import lombok.RequiredArgsConstructor;
