@@ -31,13 +31,17 @@
     <div id="login-title">Sign up Select Shop</div>
 
     <form action="/user/signup" method="post" >
-        <div class="login-id-label">username</div>
-        <input type="text" name="username" placeholder="Username" class="login-input-box">
+        <div class="login-id-label">아이디</div>
+        <input type="text" name="username" placeholder="아이디를 입력하세요" class="login-input-box">
         <p style="font-size: 14px; color: darkred" th:text="${valid_username}"></p>
 
-        <div class="login-id-label">password</div>
-        <input type="password" name="password" class="login-input-box">
+        <div class="login-id-label">비밀번호</div>
+        <input type="password" name="password" placeholder="비밀번호를 입력하세요" class="login-input-box">
         <p style="font-size: 14px; color: darkred" th:text="${valid_password}"></p>
+
+        <div class="login-id-label">비밀번호 확인</div>
+        <input type="password" name="passwordCheck" placeholder="비밀번호를 한번더 입력하세요" class="login-input-box">
+        <p style="font-size: 14px; color: darkred" th:text="${passwordCheck}"></p>
 
         <button id="login-id-submit">회원 가입</button>
     </form>

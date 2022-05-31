@@ -17,4 +17,7 @@ public class SignupRequestDto {
     @NotBlank
     @Pattern(regexp = "(?=.*[0-9a-zA-Z]).{4,}", message = "비밀번호는 4자 이상으로 해 주세요")
     private String password;
+
+    @NotBlank
+    private String passwordCheck;
 }

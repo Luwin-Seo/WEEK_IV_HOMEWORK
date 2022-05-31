@@ -24,8 +24,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
     @GetMapping("/user/login")
     public String login(){return "login";}
 
@@ -53,6 +51,11 @@ public class UserController {
 
             for (String key : validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));}
+
+            return "signup";
+        }
+        else if (!requestDto.getPassword().equals(requestDto.getPasswordCheck())) {
+            model.addAttribute("passwordCheck","비밀번호가 일치하지 않습니다.");
 
             return "signup";
         }
