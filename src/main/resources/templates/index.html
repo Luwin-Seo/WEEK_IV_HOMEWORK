@@ -426,13 +426,12 @@
 
         function logout() {
             if ($.cookie('token')) {
-                $.ajax({
-                    type: "POST",
-                    url: "/user/logout",
-                    success: function (response) {
-                        alert("애도를 마치고 로그아웃 합니다")
+                $.ajaxSetup({
+                    headers:{
+                        'Authorization': $.cookie('token', "", { path: '/' })
                     }
                 });
+                alert("애도를 마치고 로그아웃 합니다")
             } else {
                 alert("로그인되어 있지 않습니다")
             }
