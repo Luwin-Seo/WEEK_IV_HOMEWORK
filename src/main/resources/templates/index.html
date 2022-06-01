@@ -353,12 +353,6 @@
             }
         }
 
-
-
-
-
-
-
         function showPostBox() {
             $('#cards-box').empty();
             $('#Chosen-One').empty();
@@ -435,6 +429,22 @@
             } else {
                 alert("로그인되어 있지 않습니다")
             }
+        }
+
+        function test() {
+            alert("개발용 테스트 아이콘입니다")
+
+            $.ajax({
+                type: "POST",
+                url: '/test',
+                headers:{'Authorization': $.cookie('token')},
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert(response)
+                }
+            });
+
         }
     </script>
 
@@ -783,6 +793,11 @@
             font-family: 'Spoqa Han Sans';
         }
 
+        .icon-header {
+            width: 30px;
+            height: 30px;
+        }
+
         .footer {
             position: relative;
             height: 40px;
@@ -890,7 +905,8 @@
 
 <body>
 <div class="background-header">
-    <img id="logout" class="icon-logout" src="images/logout.png" style="margin-top: 20px; margin-right: 20px; float: right" alt="" onclick="logout()">
+    <img id="test" class="icon-header" src="images/test.png" style="margin-top: 20px; margin-left: 20px; float: left" alt="" onclick="test()">
+    <img id="logout" class="icon-header" src="images/logout.png" style="margin-top: 20px; margin-right: 20px; float: right" alt="" onclick="logout()">
 </div>
 <div class="background-body">
 

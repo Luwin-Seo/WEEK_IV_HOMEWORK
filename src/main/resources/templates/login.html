@@ -43,30 +43,35 @@
   }
 
   function onLogin() {
-    $.ajax({
-      type: "POST",
-      url: `/user/login`,
-      contentType: "application/json",
-      data: JSON.stringify({
-        username: $('#username').val(),
-        password: $('#password').val()
-      }),
-      success: function (response, textStatus, request) {
-        const jwtToken = request.getResponseHeader("Authorization");
+    if ($.cookie('token')) {
+      alert("이미 로그인되어 있습니다")
+      window.location.href = '/';
+    } else {
+      $.ajax({
+        type: "POST",
+        url: `/user/login`,
+        contentType: "application/json",
+        data: JSON.stringify({
+          username: $('#username').val(),
+          password: $('#password').val()
+        }),
+        success: function (response, textStatus, request) {
+          const jwtToken = request.getResponseHeader("Authorization");
 
-        if (jwtToken) {
-          $.cookie("token", jwtToken);
-          $.ajaxSetup({
-            headers:{
-              'Authorization': $.cookie('token', jwtToken, { path: '/' })
-            }
-          });
-          window.location.href = '/';
-        } else {
-          window.location.href = '/user/loginView?error';
+          if (jwtToken) {
+            $.cookie("token", jwtToken);
+            $.ajaxSetup({
+              headers:{
+                'Authorization': $.cookie('token', jwtToken, { path: '/' })
+              }
+            });
+            window.location.href = '/';
+          } else {
+            window.location.href = '/user/loginView?error';
+          }
         }
-      }
-    })
+      })
+    }
   }
 </script>
 </html>
