@@ -27,8 +27,7 @@ public class PostController {
 
     @GetMapping("/post")
     public boolean checkLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUsername();
-        return "정상처리 되었습니다";
+        return userDetails != null;
     }
 
     @GetMapping("/list")
