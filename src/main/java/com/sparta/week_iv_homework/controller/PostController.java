@@ -26,7 +26,7 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public String checkLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public boolean checkLogin(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         return "정상처리 되었습니다";
     }
@@ -55,4 +55,12 @@ public class PostController {
         postService.update(id, requestDto);
         return id;
     }
+
+    @GetMapping("/post/user")
+    public boolean usernameCheck(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String username) {
+        System.out.println(username);
+        System.out.println(userDetails.getUsername().equals(username));
+        return userDetails.getUsername().equals(username);
+    }
+
 }

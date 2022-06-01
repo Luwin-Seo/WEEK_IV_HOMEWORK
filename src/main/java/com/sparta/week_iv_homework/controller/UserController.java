@@ -64,12 +64,4 @@ public class UserController {
         return "redirect:/user/loginView";
     }
 
-    @GetMapping("/user")
-    @ResponseBody
-    public boolean usernameCheck(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String username) {
-        System.out.println(username);
-        System.out.println(userDetails.getUsername().equals(username));
-        return userDetails.getUsername().equals(username);
-    }
-
 }

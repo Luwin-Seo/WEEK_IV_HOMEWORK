@@ -129,9 +129,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         skipPathList.add("GET,/favicon.ico");
 
-        skipPathList.add("GET,/post");
         skipPathList.add("GET,/list");
-        skipPathList.add("GET,/comment/list");
+        skipPathList.add("GET,/comment/list/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
