@@ -24,7 +24,7 @@ public class CommentController {
         return null;
     }
 
-    @GetMapping("/comment/{id}")
+    @GetMapping("/comment/list/{id}")
     public List<Comment> showComment(@PathVariable Long id){
         return commentRepository.findByPostNum(id);
     }

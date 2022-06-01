@@ -32,11 +32,6 @@ public class UserService {
         return validatorResult;
     }
 
-
-
-
-
-
     public void createUserRecord(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());

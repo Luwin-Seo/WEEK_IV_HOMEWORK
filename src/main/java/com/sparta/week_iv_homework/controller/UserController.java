@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/user/login")
+    @GetMapping("/user/loginView")
     public String login(){return "login";}
 
     @GetMapping("/user/signup")
@@ -61,7 +61,7 @@ public class UserController {
         }
 
         userService.createUserRecord(requestDto);
-        return "redirect:/user/login";
+        return "redirect:/user/loginView";
     }
 
     @GetMapping("/user")

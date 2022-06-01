@@ -9,21 +9,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
 
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <script>
-
-        $.ajaxPrefilter(function (options) {
-            var headerName = '${_csrf.headerName}';
-            var token = '${_csrf.token}';
-            if (options.method === 'POST') {
-                options.headers = options.headers || {};
-                options.headers[headerName] = token;
-            }
-        });
-
         $(document).ready(function () {
             // HTML 문서를 로드할 때마다 실행합니다.
             getPosts();
@@ -106,9 +97,13 @@
         }
 
         function writePost() {
+
+            alert("지금 이거 되고 있는거 맞아?")
+
             $.ajax({
                 type: "GET",
                 url: "/post",
+                headers:{'Authorization': $.cookie('token')},
                 data: {},
                 success: function (response) {
                     let title = $('#title').val();
@@ -122,6 +117,7 @@
                     $.ajax({
                         type: "POST",
                         url: "/post",
+                        headers:{'Authorization': $.cookie('token')},
                         contentType: "application/json",
                         data: JSON.stringify(data),
                         success: function (response) {
@@ -132,7 +128,7 @@
                 },
                 error: function () {
                     alert('포스트를 작성하려면 로그인해 주세요')
-                    window.location.href = "/user/login"
+                    window.location.href = "/user/loginView"
                 }
             });
 
@@ -161,7 +157,7 @@
             $('#Chosen-One-Comment').empty();
             $.ajax({
                 type: "GET",
-                url: `/comment/${id}`,
+                url: `/comment/list/${id}`,
                 success: function (response) {
                     console.log(response)
                     for (let i = 0; i < response.length; i++) {
@@ -254,11 +250,13 @@
             $.ajax({
                 type: "GET",
                 url: `/mod/${id}`,
+                headers:{'Authorization': $.cookie('token')},
                 success: function (response) {
                     if (response) {
                         $.ajax({
                             type: "PUT",
                             url: `/mod/${id}`,
+                            headers: {"Authorization": token},
                             contentType: "application/json",
                             data: JSON.stringify(data),
                             success: function (response) {
@@ -275,11 +273,13 @@
             $.ajax({
                 type: "GET",
                 url: `/mod/${id}`,
+                headers:{'Authorization': $.cookie('token')},
                 success: function (response) {
                     if (response) {
                         $.ajax({
                             type: "DELETE",
                             url: `/mod/${id}`,
+                            headers: {"Authorization": token},
                             success: function (response) {
                                 alert('JOY문을 삭제하였습니다.');
                                 window.location.reload();
@@ -300,11 +300,13 @@
             $.ajax({
                 type: "GET",
                 url: "/post",
+                headers:{'Authorization': $.cookie('token')},
                 data: {},
                 success: function (response) {
                     $.ajax({
                         type: "POST",
                         url: `/comment/${id}`,
+                        headers: {"Authorization": token},
                         contentType: "application/json",
                         data: JSON.stringify(data),
                         success: function (response) {
@@ -317,7 +319,7 @@
                 },
                 error: function () {
                     alert('코멘트를 작성하려면 로그인해 주세요')
-                    window.location.href = "/user/login"
+                    window.location.href = "/user/loginView"
                 }
             });
             showPost(id)
@@ -327,6 +329,7 @@
             $.ajax({
                 type: "GET",
                 url: "/user",
+                headers:{'Authorization': $.cookie('token')},
                 data: {username:username},
                 success: function (response) {
 
@@ -334,6 +337,7 @@
                         $.ajax({
                             type: "DELETE",
                             url: `/comment/${id}`,
+                            headers:{'Authorization': $.cookie('token')},
                             data: {},
                             success: function (response) {
 
@@ -382,6 +386,7 @@
             $.ajax({
                 type: "GET",
                 url: "/user",
+                headers:{'Authorization': $.cookie('token')},
                 data: {username:username},
                 success: function (response) {
 
@@ -389,6 +394,7 @@
                         $.ajax({
                             type: "PUT",
                             url: `/comment/${id}`,
+                            headers:{'Authorization': $.cookie('token')},
                             contentType: "application/json",
                             data: JSON.stringify(data),
                             success: function (response) {
@@ -411,6 +417,7 @@
             $.ajax({
                 type: "POST",
                 url: "/user/logout",
+                headers:{'Authorization': $.cookie('token')},
                 success: function (response) {
                     alert("애도를 마치고 로그아웃 합니다")
                 }
