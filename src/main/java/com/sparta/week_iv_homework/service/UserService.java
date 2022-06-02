@@ -32,12 +32,16 @@ public class UserService {
         return validatorResult;
     }
 
-    public void createUserRecord(SignupRequestDto requestDto) {
-        String username = requestDto.getUsername();
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        User user = new User(username,password);
-        user.setRole(UserRoleEnum.USER);
-        userRepository.save(user);
+    public User createUserRecord(SignupRequestDto requestDto) {
+
+        if(!checkDuplication(requestDto.getUsername())) {
+            User user = new User(requestDto);
+            String password = passwordEncoder.encode(requestDto.getPassword());
+            user.setPassword(password);
+            userRepository.save(user);
+            return user;
+        }
+        return null;
     }
 
     public boolean checkDuplication(String username) {

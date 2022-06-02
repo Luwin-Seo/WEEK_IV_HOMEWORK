@@ -238,11 +238,11 @@
                     url: `/mod/${id}`,
                     headers:{'Authorization': $.cookie('token')},
                     success: function (response) {
-                        if (response) {
+                        if (response) { alert(response)
                             $.ajax({
                                 type: "PUT",
                                 url: `/mod/${id}`,
-                                headers: {"Authorization": token},
+                                headers:{'Authorization': $.cookie('token')},
                                 contentType: "application/json",
                                 data: JSON.stringify(data),
                                 success: function (response) {
@@ -270,7 +270,7 @@
                             $.ajax({
                                 type: "DELETE",
                                 url: `/mod/${id}`,
-                                headers: {"Authorization": token},
+                                headers:{'Authorization': $.cookie('token')},
                                 success: function (response) {
                                     alert('JOY문을 삭제하였습니다.');
                                     window.location.reload();

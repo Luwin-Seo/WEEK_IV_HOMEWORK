@@ -7,7 +7,6 @@ import com.sparta.week_iv_homework.security.UserDetailsImpl;
 import com.sparta.week_iv_homework.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;

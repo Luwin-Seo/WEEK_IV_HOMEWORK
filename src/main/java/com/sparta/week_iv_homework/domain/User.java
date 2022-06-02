@@ -1,5 +1,6 @@
 package com.sparta.week_iv_homework.domain;
 
+import com.sparta.week_iv_homework.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,9 +30,9 @@ public class User {
     @Enumerated(value = EnumType.STRING) //DB에 저장될때 스트링으로 변환된다는 뜻
     private UserRoleEnum role;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public User(SignupRequestDto requestDto) {
+        this.username = requestDto.getUsername();
+        this.password = requestDto.getPassword();
         this.KakaoId = null;
         this.role = UserRoleEnum.USER;
     }

@@ -20,4 +20,10 @@ public class SignupRequestDto {
 
     @NotBlank
     private String passwordCheck;
+
+    public SignupRequestDto(String username, String password, String passwordCheck) {
+        this.username = username;
+        this.password = password;
+        this.passwordCheck = passwordCheck;
+    }
 }
