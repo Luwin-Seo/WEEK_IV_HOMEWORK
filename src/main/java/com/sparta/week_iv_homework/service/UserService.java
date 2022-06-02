@@ -1,9 +1,9 @@
 package com.sparta.week_iv_homework.service;
 
+
 import com.sparta.week_iv_homework.domain.User;
-import com.sparta.week_iv_homework.domain.UserRoleEnum;
-import com.sparta.week_iv_homework.repository.UserRepository;
 import com.sparta.week_iv_homework.dto.SignupRequestDto;
+import com.sparta.week_iv_homework.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

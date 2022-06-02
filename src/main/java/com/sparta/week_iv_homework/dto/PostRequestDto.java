@@ -1,7 +1,6 @@
 package com.sparta.week_iv_homework.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Setter

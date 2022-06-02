@@ -1,5 +1,6 @@
 package com.sparta.week_iv_homework.controller;
 
+
 import com.sparta.week_iv_homework.domain.Comment;
 import com.sparta.week_iv_homework.dto.CommentRequestDto;
 import com.sparta.week_iv_homework.repository.CommentRepository;
@@ -10,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,12 +1,11 @@
 package com.sparta.week_iv_homework.service;
 
 import com.sparta.week_iv_homework.domain.Post;
-import com.sparta.week_iv_homework.repository.PostRepository;
 import com.sparta.week_iv_homework.dto.PostRequestDto;
+import com.sparta.week_iv_homework.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

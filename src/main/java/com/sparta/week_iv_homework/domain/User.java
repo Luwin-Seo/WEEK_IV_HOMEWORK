@@ -1,5 +1,6 @@
 package com.sparta.week_iv_homework.domain;
 
+
 import com.sparta.week_iv_homework.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

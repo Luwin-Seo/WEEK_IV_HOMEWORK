@@ -71,7 +71,7 @@
                         <div class="contents">
                             <div class="metadata" style="display: none" id="{id}-tguide">제목 수정하기</div>
                             <textarea class="ti-edit" name="" id="${id}-titlearea" cols="30" rows="10" style="display: none"></textarea>
-                            <div id="${id}-contents" class="text" style="display: none">
+                            <div id="${id}-contents" class="text" style="display: none; margin-top: 20px">
                                 ${content}
                             </div>
                             <div class="metadata" style="display: none" id="{id}-cguide">내용 수정하기</div>
@@ -305,7 +305,7 @@
                 });
 
                 getPosts()
-                setTimeout(function(){showPost(id);},100)
+                setTimeout(function(){showPost(id);},400)
                 showPost(id)
             } else {
                 alert("로그인이 필요한 서비스입니다")
@@ -332,7 +332,7 @@
                                 success: function (response) {
 
                                     getPosts()
-                                    setTimeout(function(){showPost(response);},100)
+                                    setTimeout(function(){showPost(response);},400)
 
                                 }
                             });
@@ -394,7 +394,7 @@
                                 success: function (response) {
 
                                     getPosts()
-                                    setTimeout(function(){showPost(response);},100)
+                                    setTimeout(function(){showPost(response);},400)
 
                                 }
                             });
