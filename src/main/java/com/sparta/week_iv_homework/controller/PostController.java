@@ -32,7 +32,7 @@ public class PostController {
 
     @GetMapping("/list")
     public List<Post> getPosts() {
-        return postRepository.findAllByOrderByCreatedAtAsc();
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @GetMapping ("/mod/{id}")

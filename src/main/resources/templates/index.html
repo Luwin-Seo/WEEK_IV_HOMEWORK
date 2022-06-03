@@ -300,12 +300,9 @@
                     contentType: "application/json",
                     data: JSON.stringify(data),
                     success: function (response) {
-
+                        getPosts()
                     }
                 });
-
-                getPosts()
-                setTimeout(function(){showPost(id);},400)
                 showPost(id)
             } else {
                 alert("로그인이 필요한 서비스입니다")
@@ -314,7 +311,7 @@
         }
 
         function deleteComment(id, username){
-
+            let target;
             if ($.cookie('token')) {
                 $.ajax({
                     type: "GET",
@@ -329,15 +326,16 @@
                                 url: `/comment/${id}`,
                                 headers:{'Authorization': $.cookie('token')},
                                 data: {},
+                                async: false,
                                 success: function (response) {
 
                                     getPosts()
-                                    setTimeout(function(){showPost(response);},400)
-
+                                    target = response
                                 }
                             });
+                            showPost(target)
                             alert("정상처리 되었습니다")
-                        }
+                        } else {alert("작성자만 글을 수정할 수 있습니다")}
                     }
                 });
             } else {
@@ -376,7 +374,7 @@
                 if (comment.length > 80) {alert("코멘트는 80자 미만으로 작성해주세요"); return;}
                 if (comment == "") {alert("수정할 내용을 입력해 주세요"); return;}
                 let data = {'postNum':postNum, 'username':username, 'comment':comment}
-
+                let target;
                 $.ajax({
                     type: "GET",
                     url: "/post/user",
@@ -391,21 +389,22 @@
                                 headers:{'Authorization': $.cookie('token')},
                                 contentType: "application/json",
                                 data: JSON.stringify(data),
+                                async: false,
                                 success: function (response) {
-
                                     getPosts()
-                                    setTimeout(function(){showPost(response);},400)
-
+                                    target = response
                                 }
                             });
+                            showPost(target)
                             alert("정상처리 되었습니다")
-                        }
+                        } else {alert("작성자만 글을 수정할 수 있습니다")}
                     }
                 });
             } else {
                 alert("로그인이 필요한 서비스입니다")
                 window.location.href = '/user/loginView';
             }
+
         }
 
         function logout() {
